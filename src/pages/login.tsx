@@ -5,6 +5,7 @@ import { AiOutlineMail, AiOutlineLock } from "react-icons/ai";
 import { RxEyeOpen, RxEyeClosed } from "react-icons/rx";
 import Swal from "sweetalert2";
 import { AuthContext } from "../Components/UserContext";
+import Loading from "./Loading";
 
 interface Inputs {
   email: string;
@@ -27,7 +28,7 @@ const Toast = Swal.mixin({
 });
 
 const Login: React.FC = (): JSX.Element => {
-  const { login } = useContext(AuthContext);
+  const { login, loading, setLoading } = useContext(AuthContext);
   const [showPass, setShowPass] = useState<boolean>(false);
   const {
     register,
@@ -42,6 +43,7 @@ const Login: React.FC = (): JSX.Element => {
     };
     login(userInfo);
   };
+  console.log(loading);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-20 items-center justify-center my-auto bg-black min-h-screen">
@@ -155,13 +157,17 @@ const Login: React.FC = (): JSX.Element => {
               </Link>
             </label>
             <div className="relative w-full ">
-              <button
-                type="submit"
-                className=" w-full text-center border text-sm  hover:bg-gray-400 hover:text-black  text-gray-300 font-bold  border-black bg-black p-2  mt-5  transition-all duration-300 ease-in rounded-md"
-              >
-                {" "}
-                Login
-              </button>
+              {loading ? (
+                <Loading />
+              ) : (
+                <button
+                  type="submit"
+                  className=" w-full text-center border text-sm  hover:bg-gray-400 hover:text-black  text-gray-300 font-bold  border-black bg-black p-2  mt-5  transition-all duration-300 ease-in rounded-md"
+                >
+                  {" "}
+                  Login
+                </button>
+              )}
             </div>
           </form>
         </div>

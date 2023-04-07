@@ -3,7 +3,7 @@ import React from "react";
 type Props = {};
 
 const Profile = (props: Props) => {
-  return <div></div>;
+  return <div>Something Magnificent coming</div>;
 };
 
 export default Profile;

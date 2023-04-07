@@ -35,6 +35,8 @@ interface AuthContextType {
   login(loginInfo: LoginInfoProps): Promise<void>;
   user: UserInfro | {};
   setUser: React.Dispatch<React.SetStateAction<UserInfro | {}>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -42,10 +44,12 @@ export const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   user: {},
   setUser: () => {},
+  loading: false,
+  setLoading: () => {},
 });
 const UserContext = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<LoginInfoProps | UserInfoProps | {}>({});
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const signUp = async (userInfo: UserInfoProps) => {
     try {
       const response = await fetch("http://localhost:8000/user/signup", {
@@ -57,6 +61,7 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
       });
       const user = await response.json();
       setUser(user);
+      setLoading(false);
       localStorage.setItem("email", user.email);
       if (user._id) {
         await Toast.fire({
@@ -65,6 +70,7 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
           iconColor: "green",
         });
       } else {
+        setLoading(false);
         await Toast.fire({
           icon: "error",
           title: `${user.message}`,
@@ -78,6 +84,7 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
   };
 
   const login = async (loginInfo: LoginInfoProps) => {
+    setLoading(true);
     try {
       const response = await fetch("http://localhost:8000/user/login", {
         method: "POST",
@@ -88,6 +95,7 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
       });
       const user = await response.json();
       setUser(user);
+      setLoading(false);
       localStorage.setItem("email", user.email);
       if (user._id) {
         await Toast.fire({
@@ -103,12 +111,16 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
         });
       }
       console.log(user);
-    } catch (err) {}
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+    }
   };
   const email = localStorage.getItem("email");
   console.log(email);
   console.log(user);
-  const authInfo = { signUp, login, user, setUser };
+  console.log(loading);
+  const authInfo = { signUp, login, user, setUser, loading, setLoading };
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );

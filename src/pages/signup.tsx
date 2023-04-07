@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { AiOutlineMail, AiOutlineLock, AiOutlineUser } from "react-icons/ai";
 import { RxEyeOpen, RxEyeClosed } from "react-icons/rx";
 import { AuthContext } from "../Components/UserContext";
+import Loading from "./Loading";
 
 interface Inputs {
   email: string;
@@ -13,7 +14,7 @@ interface Inputs {
 }
 
 const SignUp: React.FC = (): JSX.Element => {
-  const { signUp } = useContext(AuthContext);
+  const { signUp, loading, setLoading } = useContext(AuthContext);
   const [showPass, setShowPass] = useState<boolean>(false);
   const {
     register,
@@ -28,6 +29,7 @@ const SignUp: React.FC = (): JSX.Element => {
       email: data.email,
       password: data.password,
     };
+    setLoading(true);
     signUp(userInfo);
   };
 
@@ -213,13 +215,17 @@ const SignUp: React.FC = (): JSX.Element => {
               </Link>
             </label>
             <div className="relative w-full ">
-              <button
-                type="submit"
-                className=" w-full text-center border font-bold text-sm  hover:bg-gray-400 hover:text-black  text-gray-300   border-black bg-black p-2  mt-5  transition-all duration-300 ease-in rounded-md"
-              >
-                {" "}
-                Sign Up
-              </button>
+              {loading ? (
+                <Loading />
+              ) : (
+                <button
+                  type="submit"
+                  className=" w-full text-center border text-sm  hover:bg-gray-400 hover:text-black  text-gray-300 font-bold  border-black bg-black p-2  mt-5  transition-all duration-300 ease-in rounded-md h-10"
+                >
+                  {" "}
+                  Login
+                </button>
+              )}
             </div>
           </form>
         </div>
