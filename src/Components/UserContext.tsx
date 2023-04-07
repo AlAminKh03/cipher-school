@@ -1,4 +1,5 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
+
 import Swal from "sweetalert2";
 
 const Toast = Swal.mixin({
@@ -27,14 +28,14 @@ interface LoginInfoProps {
   email: string;
   password: string;
 }
-interface UserInfro extends UserInfoProps {
+interface UserInfo extends UserInfoProps {
   _id: string;
 }
 interface AuthContextType {
   signUp(userInfo: UserInfoProps): Promise<void>;
   login(loginInfo: LoginInfoProps): Promise<void>;
-  user: UserInfro | {};
-  setUser: React.Dispatch<React.SetStateAction<UserInfro | {}>>;
+  user: UserInfo | {};
+  setUser: React.Dispatch<React.SetStateAction<UserInfo | {}>>;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -62,8 +63,9 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
       const user = await response.json();
       setUser(user);
       setLoading(false);
-      localStorage.setItem("email", user.email);
+
       if (user._id) {
+        localStorage.setItem("email", user.email);
         await Toast.fire({
           icon: "success",
           title: "User Registration successful",
@@ -77,8 +79,10 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
           iconColor: "red",
         });
       }
+      return user;
       console.log(user);
     } catch (err) {
+      setLoading(false);
       console.log(err);
     }
   };
@@ -96,8 +100,9 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
       const user = await response.json();
       setUser(user);
       setLoading(false);
-      localStorage.setItem("email", user.email);
+
       if (user._id) {
+        localStorage.setItem("email", user.email);
         await Toast.fire({
           icon: "success",
           title: "Sucessfully loggedIn",

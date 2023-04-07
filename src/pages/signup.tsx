@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineMail, AiOutlineLock, AiOutlineUser } from "react-icons/ai";
 import { RxEyeOpen, RxEyeClosed } from "react-icons/rx";
 import { AuthContext } from "../Components/UserContext";
@@ -16,6 +16,7 @@ interface Inputs {
 const SignUp: React.FC = (): JSX.Element => {
   const { signUp, loading, setLoading } = useContext(AuthContext);
   const [showPass, setShowPass] = useState<boolean>(false);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -32,6 +33,11 @@ const SignUp: React.FC = (): JSX.Element => {
     setLoading(true);
     signUp(userInfo);
   };
+  const email = localStorage.getItem("email");
+  console.log(email, typeof email);
+  if (email) {
+    navigate("/myProfile");
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-20 items-center justify-center my-auto ">

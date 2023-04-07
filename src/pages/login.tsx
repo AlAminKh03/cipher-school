@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineMail, AiOutlineLock } from "react-icons/ai";
 import { RxEyeOpen, RxEyeClosed } from "react-icons/rx";
 import Swal from "sweetalert2";
@@ -30,6 +30,7 @@ const Toast = Swal.mixin({
 const Login: React.FC = (): JSX.Element => {
   const { login, loading, setLoading } = useContext(AuthContext);
   const [showPass, setShowPass] = useState<boolean>(false);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -41,7 +42,13 @@ const Login: React.FC = (): JSX.Element => {
       email: data.email,
       password: data.password,
     };
-    login(userInfo);
+    login(userInfo)
+      .then((res) => {
+        navigate("/myProfile");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   console.log(loading);
 
