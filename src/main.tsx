@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import Login from "./pages/login";
 import Profile from "./pages/Profile";
+import UserContext from "./Components/UserContext";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <UserContext>
+      <RouterProvider router={router} />
+    </UserContext>
   </React.StrictMode>
 );

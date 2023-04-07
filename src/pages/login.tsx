@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { AiOutlineMail, AiOutlineLock } from "react-icons/ai";
 import { RxEyeOpen, RxEyeClosed } from "react-icons/rx";
 import Swal from "sweetalert2";
+import { AuthContext } from "../Components/UserContext";
 
 interface Inputs {
   email: string;
@@ -26,6 +27,7 @@ const Toast = Swal.mixin({
 });
 
 const Login: React.FC = (): JSX.Element => {
+  const { login } = useContext(AuthContext);
   const [showPass, setShowPass] = useState<boolean>(false);
   const {
     register,
@@ -38,33 +40,7 @@ const Login: React.FC = (): JSX.Element => {
       email: data.email,
       password: data.password,
     };
-
-    try {
-      const response = await fetch("http://localhost:8000/user/login", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(userInfo),
-      });
-      const user = await response.json();
-      if (user._id) {
-        await Toast.fire({
-          icon: "success",
-          title: "Sucessfully loggedIn",
-
-          iconColor: "green",
-        });
-      } else {
-        await Toast.fire({
-          icon: "error",
-          title: `${user.message}`,
-
-          iconColor: "red",
-        });
-      }
-      console.log(user);
-    } catch (err) {}
+    login(userInfo);
   };
 
   return (
@@ -91,12 +67,12 @@ const Login: React.FC = (): JSX.Element => {
       </div>
       <div className="  flex justify-center items-center bg-black">
         <div className=" flex flex-col justify-center items-center px-4 py-10 z-[10] shadow-blue-800 shadow-lg hover:shadow-blue-800 hover:shadow-xl rounded-xl bg-gray-900 w-[80%] md:w-[70%]  mx-auto mb-10 mt-20 transition-all duration-700 ease-in">
-          <p className="text-2xl font-semibold  text-transparent   bg-clip-text bg-gradient-to-r from-blue-900 to-purple-800">
+          <p className="text-2xl font-semibold  text-transparent   bg-clip-text bg-gradient-to-r from-blue-400 to-purple-800">
             Please Login
           </p>
           <form onSubmit={handleSubmit(onSubmit)} className="w-full p-4 ">
             <div className="pb-3 w-full">
-              <label className="text-white font-bold text-sm">
+              <label className="text-gray-300  text-xs font-bold">
                 Email <span className="text-red-500">*</span>{" "}
               </label>
               <br />
@@ -108,14 +84,14 @@ const Login: React.FC = (): JSX.Element => {
                 } py-1  w-full `}
               >
                 <AiOutlineMail
-                  className="h-5 w-5 text-gray-400 ml-2 mr-2"
+                  className="h-4 w-4 text-gray-400 ml-2 mr-2"
                   aria-hidden="true"
                 />
                 <input
                   type="text"
                   placeholder="Insert your Email"
                   {...register("email", { required: true })}
-                  className={` outline-none w-full focus:border-transparent bg-gray-700 text-white autofill:bg-gray-700`}
+                  className={` outline-none w-full focus:border-transparent bg-gray-700 text-gray-300 autofill:bg-gray-700 font-semibold text-sm placeholder:text-xs p-1`}
                 />
               </div>
               {errors.email?.type === "required" && (
@@ -127,7 +103,7 @@ const Login: React.FC = (): JSX.Element => {
             </div>
 
             <div className="pb-3  w-full">
-              <label className="text-white font-bold text-sm">
+              <label className="text-gray-300 font-bold text-xs">
                 Password <span className="text-red-500">*</span>{" "}
               </label>
               <br />
@@ -139,24 +115,24 @@ const Login: React.FC = (): JSX.Element => {
                 } py-1 w-full `}
               >
                 <AiOutlineLock
-                  className="h-5 w-5 text-gray-400 ml-2 mr-2"
+                  className="h-4 w-4 text-gray-400 ml-2 mr-2"
                   aria-hidden="true"
                 />
                 <input
                   type={showPass ? "text" : "password"}
-                  placeholder="insert minium 6 chracters"
+                  placeholder="insert your password"
                   {...register("password", { required: true })}
-                  className={` outline-none  focus:border-transparent bg-gray-700 text-white w-full `}
+                  className={` outline-none  focus:border-transparent bg-gray-700 text-gray-300 w-full font-semibold text-sm placeholder:text-xs p-1`}
                 />
                 {showPass ? (
                   <RxEyeOpen
-                    className="h-5 w-5 text-white cursor-pointer ml-2 mr-2"
+                    className="h-6 w-6 text-gray-300 cursor-pointer ml-2 mr-2"
                     aria-hidden="true"
                     onClick={() => setShowPass(!showPass)}
                   />
                 ) : (
                   <RxEyeClosed
-                    className="h-5 w-5 text-white cursor-pointer ml-2 mr-2"
+                    className="h-6 w-6 text-gray-300 cursor-pointer ml-2 mr-2"
                     aria-hidden="true"
                     onClick={() => setShowPass(!showPass)}
                   />
@@ -181,7 +157,7 @@ const Login: React.FC = (): JSX.Element => {
             <div className="relative w-full ">
               <button
                 type="submit"
-                className=" w-full text-center border   hover:bg-white hover:text-black  text-white font-bold  border-black bg-black p-2  mt-5  transition-all duration-300 ease-in rounded-md"
+                className=" w-full text-center border text-sm  hover:bg-gray-400 hover:text-black  text-gray-300 font-bold  border-black bg-black p-2  mt-5  transition-all duration-300 ease-in rounded-md"
               >
                 {" "}
                 Login
