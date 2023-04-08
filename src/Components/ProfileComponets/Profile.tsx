@@ -139,7 +139,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="bg-black  w-screen">
+    <div className="bg-black  w-full">
       <div className="mx-[10%] bg-gray-900 ">
         <div className="relative">
           <img src={bg} className="h-[150px] object-cover  w-full " />
