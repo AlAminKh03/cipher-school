@@ -44,13 +44,16 @@ const ChangePass = () => {
       newPass: data.newPass,
     };
 
-    fetch(`http://localhost:8000/user/changePass/${email}`, {
-      method: "PATCH",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(updateInfo),
-    })
+    fetch(
+      `https://cipher-school-server-ecru.vercel.app/user/changePass/${email}`,
+      {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(updateInfo),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {

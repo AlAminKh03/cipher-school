@@ -62,7 +62,9 @@ const Profile = () => {
     refetch,
     isLoading,
   } = useQuery(["user"], async () => {
-    const res = await fetch(`http://localhost:8000/user/getUser/${email}`);
+    const res = await fetch(
+      `https://cipher-school-server-ecru.vercel.app/user/getUser/${email}`
+    );
     const data = await res.json();
     console.log(data);
 
@@ -81,13 +83,16 @@ const Profile = () => {
         firstName: data.firstName,
         lastName: data.lastName,
       };
-      return await fetch(`http://localhost:8000/user/getUser/${email}`, {
-        method: "PATCH",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(updateInfo),
-      })
+      return await fetch(
+        `https://cipher-school-server-ecru.vercel.app/user/getUser/${email}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(updateInfo),
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           Toast.fire({
@@ -117,13 +122,16 @@ const Profile = () => {
             lastName: data.lastName,
             img: imageData.data.url,
           };
-          fetch(`http://localhost:8000/user/getUser/${email}`, {
-            method: "PATCH",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify(updateInfo),
-          })
+          fetch(
+            `https://cipher-school-server-ecru.vercel.app/user/getUser/${email}`,
+            {
+              method: "PATCH",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify(updateInfo),
+            }
+          )
             .then((res) => res.json())
             .then((data) => {
               Toast.fire({

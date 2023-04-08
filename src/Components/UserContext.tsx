@@ -53,13 +53,16 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const signUp = async (userInfo: UserInfoProps) => {
     try {
-      const response = await fetch("http://localhost:8000/user/signup", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(userInfo),
-      });
+      const response = await fetch(
+        "https://cipher-school-server-ecru.vercel.app/user/signup",
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(userInfo),
+        }
+      );
       const user = await response.json();
       setUser(user);
       setLoading(false);
@@ -90,13 +93,16 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
   const login = async (loginInfo: LoginInfoProps) => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/user/login", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(loginInfo),
-      });
+      const response = await fetch(
+        "https://cipher-school-server-ecru.vercel.app/user/login",
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(loginInfo),
+        }
+      );
       const user = await response.json();
       setUser(user);
       setLoading(false);

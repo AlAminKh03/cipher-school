@@ -69,7 +69,9 @@ const Social = () => {
     refetch,
     isLoading,
   } = useQuery(["socialLinks"], async () => {
-    const res = await fetch(`http://localhost:8000/user/getSocial/${email}`);
+    const res = await fetch(
+      `https://cipher-school-server-ecru.vercel.app/user/getSocial/${email}`
+    );
     const data = await res.json();
     console.log(data);
     return data;
@@ -84,13 +86,16 @@ const Social = () => {
       website: data.website,
     };
 
-    fetch(`http://localhost:8000/user/getSocial/${email}`, {
-      method: "PATCH",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(updateInfo),
-    })
+    fetch(
+      `https://cipher-school-server-ecru.vercel.app/user/getSocial/${email}`,
+      {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(updateInfo),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

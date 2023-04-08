@@ -28,7 +28,9 @@ const Interests = () => {
     refetch,
     isLoading,
   } = useQuery(["techs"], async () => {
-    const res = await fetch(`http://localhost:8000/user/getTech/${email}`);
+    const res = await fetch(
+      `https://cipher-school-server-ecru.vercel.app/user/getTech/${email}`
+    );
     const data = await res.json();
     console.log(data);
     return data;
@@ -43,13 +45,16 @@ const Interests = () => {
       python: data.python,
     };
 
-    fetch(`http://localhost:8000/user/getTech/${email}`, {
-      method: "PATCH",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(updateInfo),
-    })
+    fetch(
+      `https://cipher-school-server-ecru.vercel.app/user/getTech/${email}`,
+      {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(updateInfo),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -207,7 +212,7 @@ const Interests = () => {
           </span>
           <span
             className={` bg-blue-800 text-gray-300 font-bold p-1 rounded-md m-3 w-fit ${
-              techs?.typescript ? "block" : "hidden"
+              techs?.vue ? "block" : "hidden"
             } `}
           >
             {" "}

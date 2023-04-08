@@ -20,7 +20,9 @@ const Infromation = () => {
   } = useForm<InfoProps>();
 
   const { data: Infos, refetch } = useQuery(["Infos"], async () => {
-    const res = await fetch(`http://localhost:8000/user/getInfo/${email}`);
+    const res = await fetch(
+      `https://cipher-school-server-ecru.vercel.app/user/getInfo/${email}`
+    );
     const data = await res.json();
     console.log(data);
     return data;
@@ -31,13 +33,16 @@ const Infromation = () => {
       profession: data.profession,
     };
 
-    fetch(`http://localhost:8000/user/getInfo/${email}`, {
-      method: "PATCH",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(updateInfo),
-    })
+    fetch(
+      `https://cipher-school-server-ecru.vercel.app/user/getInfo/${email}`,
+      {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(updateInfo),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

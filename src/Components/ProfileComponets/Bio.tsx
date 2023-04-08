@@ -19,7 +19,9 @@ const Bio = () => {
   } = useForm<BioProps>();
 
   const { data: bio, refetch } = useQuery(["bio"], async () => {
-    const res = await fetch(`http://localhost:8000/user/getBio/${email}`);
+    const res = await fetch(
+      `https://cipher-school-server-ecru.vercel.app/user/getBio/${email}`
+    );
     const data = await res.json();
     console.log(data);
     return data;
@@ -28,7 +30,7 @@ const Bio = () => {
     const updateInfo = {
       bio: data.bio,
     };
-    fetch(`http://localhost:8000/user/getBio/${email}`, {
+    fetch(`https://cipher-school-server-ecru.vercel.app/user/getBio/${email}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
