@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import bg from "../assets/profile/bg.jpg";
+import bg from "../../assets/profile/bg.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import {
   AiFillEdit,
@@ -7,10 +7,28 @@ import {
   AiOutlineMail,
   AiOutlineUser,
 } from "react-icons/ai";
-import { AuthContext } from "../Components/UserContext";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { AuthContext } from "../UserContext";
+import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
-import Loading from "./Loading";
+import Loading from "../../pages/Loading";
+import { useQuery } from "react-query";
+import Swal from "sweetalert2";
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-right",
+  iconColor: "blue",
+  width: "22rem",
+  background: "black",
+  color: "white",
+  padding: "5px",
+  customClass: {
+    popup: "colored-toast",
+  },
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+});
 
 interface Inputs {
   email: string;
@@ -27,37 +45,102 @@ interface UserProps {
 
 const Profile = () => {
   const { signUp, loading, setLoading } = useContext(AuthContext);
-  const [user, setUser] = useState<UserProps>();
-  const [showPass, setShowPass] = useState<boolean>(false);
-  const navigate = useNavigate();
+  // const [user, setUser] = useState<UserProps>();
   const email = localStorage.getItem("email");
+  const imagebbkey = "57ee535d1e0e0bdddbe43da2b7d8e612";
+
   const {
     register,
     handleSubmit,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm<Inputs>();
-  useEffect(() => {
-    fetch(`http://localhost:8000/user/getUser/${email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setUser(data);
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+  const {
+    data: user,
+    refetch,
+    isLoading,
+  } = useQuery(["user"], async () => {
+    const res = await fetch(`http://localhost:8000/user/getUser/${email}`);
+    const data = await res.json();
+    console.log(data);
+
+    return data;
   });
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+  console.log(user);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const userInfo = {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-    };
+    console.log(data);
+
+    if (data.image.length === 0) {
+      const updateInfo = {
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+      };
+      return await fetch(`http://localhost:8000/user/getUser/${email}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(updateInfo),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          Toast.fire({
+            icon: "success",
+            title: "Updated successfully",
+            iconColor: "green",
+          });
+          console.log(data);
+          refetch();
+        });
+    }
+
+    const image = data.image[0];
+    const formData = new FormData();
+    formData.append("image", image);
+    const url = `https://api.imgbb.com/1/upload?key=${imagebbkey}`;
+    fetch(url, {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((imageData) => {
+        if (imageData.success) {
+          const updateInfo = {
+            email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            img: imageData.data.url,
+          };
+          fetch(`http://localhost:8000/user/getUser/${email}`, {
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(updateInfo),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              Toast.fire({
+                icon: "success",
+                title: "Updated Successfylly",
+                iconColor: "green",
+              });
+              refetch();
+              console.log(data);
+            });
+        }
+      });
   };
 
   return (
-    <div className="bg-black min-h-screen w-screen">
-      <div className="mx-[10%] bg-gray-900 min-h-screen">
+    <div className="bg-black  w-screen">
+      <div className="mx-[10%] bg-gray-900 ">
         <div className="relative">
           <img src={bg} className="h-[150px] object-cover  w-full " />
           <div className="absolute top-[80%] lg:left-[3%]  z-10 flex  justify-center flex-col lg:flex-row lg:justify-between items-center w-full">
@@ -82,7 +165,7 @@ const Profile = () => {
             </div>
 
             <div className="lg:mr-20 mr-0">
-              <button className=" p-2 bg-gray-800 font-semibold  text-gray-300 rounded-md flex items-center gap-1 justify-center">
+              <div className=" p-2 bg-gray-800 font-semibold  text-gray-300 rounded-md flex items-center gap-1 justify-center">
                 <AiFillEdit className="w-5 h-5 text-gray-300" />
                 <label htmlFor="edit-profile" className="cursor-pointer">
                   Edit Profile
@@ -113,23 +196,7 @@ const Profile = () => {
                           />
                         )}
                         <div className=" ">
-                          <input
-                            type="file"
-                            placeholder="Insert your Email"
-                            className="hidden"
-                            {...register("image")}
-                          />
-                          <button
-                            className={` outline-none focus:border-transparent bg-gray-700 text-gray-300 text-sm placeholder:text-xs font-semibold p-1 h-[150px] w-[150px] rounded-full hover:bg-gray-600`}
-                            onClick={() => {
-                              const fileInput = document.querySelector(
-                                'input[type="file"]'
-                              ) as HTMLInputElement;
-                              fileInput.click();
-                            }}
-                          >
-                            Update Photo +
-                          </button>
+                          <input type="file" {...register("image")} />
                         </div>
                       </div>
 
@@ -140,10 +207,8 @@ const Profile = () => {
                           </label>
                           <br />
                           <div
-                            className={`flex items-center border-2 bg-gray-700  border-gray-700 rounded-md ${
-                              errors.firstName
-                                ? "focus-within:border-red-600"
-                                : "focus-within:border-blue-700"
+                            className={`flex items-center border-2 bg-gray-700  border-gray-700 rounded-md 
+                               focus-within:border-blue-700
                             } py-1  w-full `}
                           >
                             <AiOutlineUser
@@ -152,10 +217,10 @@ const Profile = () => {
                             />
                             <input
                               type="text"
-                              placeholder="First Name"
                               defaultValue={user?.firstName}
+                              placeholder="First Name"
                               {...register("firstName")}
-                              className={` outline-none w-full focus:border-transparent bg-gray-700 text-gray-300 font-semibold text-sm placeholder:text-xs p-1`}
+                              className={`outline-none w-full focus:border-transparent bg-gray-700 text-gray-300 font-semibold text-sm placeholder:text-xs p-1`}
                             />
                           </div>
                         </div>
@@ -201,7 +266,7 @@ const Profile = () => {
                           />
                           <input
                             type="text"
-                            value={user?.email}
+                            value={user?.email || " "}
                             placeholder="Insert your Email"
                             {...register("email")}
                             className={` outline-none w-full focus:border-transparent bg-gray-700 text-gray-400 text-sm placeholder:text-xs font-semibold p-1`}
@@ -225,7 +290,7 @@ const Profile = () => {
                     </form>
                   </div>
                 </div>
-              </button>
+              </div>
             </div>
           </div>
         </div>

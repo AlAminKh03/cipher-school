@@ -17,8 +17,6 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
     return <React.Fragment>{children}</React.Fragment>;
   }
 
-  console.log(email);
-
   if (loading) {
     return (
       <div className="bg-black text-gray-300 min-h-screen">Loading....</div>
