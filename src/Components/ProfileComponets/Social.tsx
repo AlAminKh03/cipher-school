@@ -64,7 +64,11 @@ const Social = () => {
     },
   ];
 
-  const { data: socialLinks, refetch } = useQuery(["socialLinks"], async () => {
+  const {
+    data: socialLinks,
+    refetch,
+    isLoading,
+  } = useQuery(["socialLinks"], async () => {
     const res = await fetch(`http://localhost:8000/user/getSocial/${email}`);
     const data = await res.json();
     console.log(data);
@@ -97,6 +101,9 @@ const Social = () => {
       });
     console.log(data);
   };
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="w-full bg-black ">
       <div className="mx-[10%] bg-gray-900 px-10 py-10">

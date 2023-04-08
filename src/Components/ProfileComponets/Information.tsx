@@ -4,28 +4,10 @@ import { AiFillEdit } from "react-icons/ai";
 import { AuthContext } from "../UserContext";
 import Loading from "../../pages/Loading";
 import { useQuery } from "react-query";
-import {
-  BsFacebook,
-  BsInstagram,
-  BsLinkedin,
-  BsGithub,
-  BsTwitter,
-  BsGlobe,
-} from "react-icons/bs";
-import { IconType } from "react-icons";
-import { Link } from "react-router-dom";
 
-interface SocialProps {
-  facebook: string;
-  instagram: string;
-  linkedIn: string;
-  github: string;
-  twitter: string;
-  website: string;
-}
-interface socialProps {
-  name: string;
-  icon: IconType;
+interface InfoProps {
+  education: string;
+  profession: string;
 }
 
 const Infromation = () => {
@@ -35,52 +17,21 @@ const Infromation = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SocialProps>();
+  } = useForm<InfoProps>();
 
-  const socials: socialProps[] = [
-    {
-      name: "Facebook",
-      icon: BsFacebook,
-    },
-    {
-      name: "Instgram",
-      icon: BsInstagram,
-    },
-    {
-      name: "LinkedIn",
-      icon: BsLinkedin,
-    },
-    {
-      name: "Github",
-      icon: BsGithub,
-    },
-    {
-      name: "Twitter",
-      icon: BsTwitter,
-    },
-    {
-      name: "Website",
-      icon: BsGlobe,
-    },
-  ];
-
-  const { data: socialLinks, refetch } = useQuery(["socialLinks"], async () => {
-    const res = await fetch(`http://localhost:8000/user/getSocial/${email}`);
+  const { data: Infos, refetch } = useQuery(["Infos"], async () => {
+    const res = await fetch(`http://localhost:8000/user/getInfo/${email}`);
     const data = await res.json();
     console.log(data);
     return data;
   });
-  const onSubmit: SubmitHandler<SocialProps> = async (data) => {
+  const onSubmit: SubmitHandler<InfoProps> = async (data) => {
     const updateInfo = {
-      facebook: data.facebook,
-      instagram: data.instagram,
-      linkedIn: data.linkedIn,
-      github: data.github,
-      twitter: data.twitter,
-      website: data.website,
+      education: data.education,
+      profession: data.profession,
     };
 
-    fetch(`http://localhost:8000/user/getSocial/${email}`, {
+    fetch(`http://localhost:8000/user/getInfo/${email}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
@@ -129,105 +80,68 @@ const Infromation = () => {
                   </label>
                   <h3>INSTITUTIONAL INFORMATION</h3>
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <div>
-                      <label>Highest education</label>
-                      <select {...register("education")}>
-                        <option value="primary">Primary</option>
-                        <option value="secondary">Secondary</option>
-                        <option value="higher secondary">
+                    <div className="p-8">
+                      <label className="p-2">Highest education</label>
+                      <select
+                        {...register("education")}
+                        className="bg-gray-800 h-14 border-blue-600 rounded-md p-3"
+                      >
+                        <option value="Primary">Primary</option>
+                        <option value="Secondary">Secondary</option>
+                        <option value="Higher Secondary">
                           Higher Secondary
                         </option>
-                        <option value="graduating">Graduating</option>
+                        <option value="Graduating">Graduating</option>
                       </select>
                     </div>
-                    <div>
-                      <label>Current education</label>
-                      <select {...register("profession")}>
-                        <option value="primary">Job</option>
-                        <option value="secondary">studying</option>
-                        <option value="higher secondary">Teaching</option>
-                        <option value="graduating">Freelancing</option>
+                    <div className="p-8">
+                      <label className="p-2">Current education</label>
+                      <select
+                        {...register("profession")}
+                        className="bg-gray-800 h-14 border-blue-600 rounded-md p-3"
+                      >
+                        <option value="Job">Job</option>
+                        <option value="Studying">studying</option>
+                        <option value="Teaching">Teaching</option>
+                        <option value="Freelancing">Freelancing</option>
                       </select>
+                    </div>
+                    <div className="relative w-full ">
+                      {loading ? (
+                        <Loading />
+                      ) : (
+                        <button
+                          type="submit"
+                          className=" w-full text-center border text-sm  hover:bg-gray-400 hover:text-black  text-gray-300 font-bold  border-black bg-black p-2  mt-5  transition-all duration-300 ease-in rounded-md h-10"
+                        >
+                          {" "}
+                          Update
+                        </button>
+                      )}
                     </div>
                   </form>
-                  .
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className=" w-full mr-10  rounded-md grid grid-cols-2 gap-4">
-          <div
-            className={`flex items-center gap-2 ${
-              socialLinks?.facebook
-                ? "text-gray-300 hover:underline"
-                : " text-gray-700 disabled"
-            }`}
-          >
-            <BsFacebook className=" w-7 h-7" />
-            <Link to={socialLinks?.facebook} className="font-semibold">
-              Facebook
-            </Link>
+        <div className=" w-full mr-10  rounded-md grid-cols-1 grid lg:grid-cols-2 gap-4">
+          <div className="">
+            <p className="text-gray-300 text-lg font-semibold bg-gray-800 p-2">
+              Highest Education
+            </p>
+            <p className="bg-gray-700 text-lg p-2 border-2 border-blue-800 rounded-md text-gray-300 font-bold text-center">
+              {Infos?.education}
+            </p>
           </div>
-          <div
-            className={`flex items-center gap-2 ${
-              socialLinks?.instagram
-                ? "text-gray-300 hover:underline"
-                : " text-gray-700 disabled"
-            }`}
-          >
-            <BsInstagram className=" w-7 h-7" />
-            <Link to={socialLinks?.instagram} className="font-semibold">
-              Instagram
-            </Link>
-          </div>
-          <div
-            className={`flex items-center gap-2 ${
-              socialLinks?.linkedIn
-                ? "text-gray-300 hover:underline"
-                : " text-gray-700 disabled"
-            }`}
-          >
-            <BsLinkedin className=" w-7 h-7" />
-            <Link to={socialLinks?.linkedIn} className="font-semibold">
-              LinkedIn
-            </Link>
-          </div>
-          <div
-            className={`flex items-center gap-2 ${
-              socialLinks?.github
-                ? "text-gray-300 hover:underline"
-                : " text-gray-700 disabled"
-            }`}
-          >
-            <BsGithub className=" w-7 h-7" />
-            <Link to={socialLinks?.github} className="font-semibold">
-              Github
-            </Link>
-          </div>
-          <div
-            className={`flex items-center gap-2 ${
-              socialLinks?.twitter
-                ? "text-gray-300 hover:underline"
-                : " text-gray-700 disabled"
-            }`}
-          >
-            <BsTwitter className=" w-7 h-7" />
-            <Link to={socialLinks?.twitter} className="font-semibold">
-              Twitter
-            </Link>
-          </div>
-          <div
-            className={`flex items-center gap-2 ${
-              socialLinks?.website
-                ? "text-gray-300 hover:underline"
-                : " text-gray-700 disabled cursor-none"
-            }`}
-          >
-            <BsGlobe className=" w-7 h-7" />
-            <Link to={socialLinks?.website} className="font-semibold">
-              website
-            </Link>
+          <div>
+            <p className="text-gray-300 text-lg font-semibold bg-gray-800 p-2">
+              {" "}
+              Current Job
+            </p>
+            <p className="bg-gray-700 text-lg p-2 border-2 border-blue-800  rounded-md text-gray-300 font-bold text-center">
+              {Infos?.profession}
+            </p>
           </div>
         </div>
       </div>
