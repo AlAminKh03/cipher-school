@@ -9,7 +9,8 @@ import UserContext from "./Components/UserContext";
 import PrivateRoute from "./Components/PrivateRoute/PrivateRoute";
 import { QueryClient, QueryClientProvider } from "react-query";
 import MainProfile from "./pages/MainProfile";
-import SignUp from "./pages/signup";
+import myFollower from "./pages/myFollower";
+import MyFollower from "./pages/myFollower";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <App />,
+  },
+  {
+    path: "/followers",
+    element: <MyFollower />,
   },
 ]);
 
