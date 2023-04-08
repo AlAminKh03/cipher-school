@@ -83,7 +83,6 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
         });
       }
       return user;
-      console.log(user);
     } catch (err) {
       setLoading(false);
       console.log(err);
@@ -91,7 +90,6 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
   };
 
   const login = async (loginInfo: LoginInfoProps) => {
-    setLoading(true);
     try {
       const response = await fetch(
         "https://cipher-school-server-ecru.vercel.app/user/login",
@@ -121,16 +119,12 @@ const UserContext = ({ children }: { children: React.ReactNode }) => {
           iconColor: "red",
         });
       }
-      console.log(user);
     } catch (err) {
       setLoading(false);
       console.log(err);
     }
   };
-  const email = localStorage.getItem("email");
-  console.log(email);
-  console.log(user);
-  console.log(loading);
+
   const authInfo = { signUp, login, user, setUser, loading, setLoading };
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>

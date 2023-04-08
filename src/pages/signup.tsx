@@ -34,9 +34,8 @@ const SignUp: React.FC = (): JSX.Element => {
     signUp(userInfo);
   };
   const email = localStorage.getItem("email");
-  console.log(email, typeof email);
   if (email) {
-    navigate("/myProfile");
+    navigate("/");
   }
 
   return (
@@ -211,7 +210,7 @@ const SignUp: React.FC = (): JSX.Element => {
                 </p>
               )}
             </div>
-            <label className=" text-center text-xs font-light">
+            {/* <label className=" text-center text-xs font-light">
               Forget Password?{" "}
               <Link
                 to={"/resetPassword"}
@@ -219,7 +218,7 @@ const SignUp: React.FC = (): JSX.Element => {
               >
                 Reset Password
               </Link>
-            </label>
+            </label> */}
             <div className="relative w-full ">
               {loading ? (
                 <Loading />

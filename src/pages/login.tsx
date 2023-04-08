@@ -42,15 +42,13 @@ const Login: React.FC = (): JSX.Element => {
       email: data.email,
       password: data.password,
     };
-    login(userInfo)
-      .then((res) => {
-        navigate("/myProfile");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setLoading(true);
+    login(userInfo);
   };
-  console.log(loading);
+  const email = localStorage.getItem("email");
+  if (email) {
+    navigate("/");
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-20 items-center justify-center my-auto bg-black min-h-screen">
@@ -65,7 +63,7 @@ const Login: React.FC = (): JSX.Element => {
             </span>
 
             <Link
-              to={"/"}
+              to={"/signup"}
               className="hover:underline text-blue-600  text-lg font-semibold"
             >
               {" "}
@@ -154,7 +152,7 @@ const Login: React.FC = (): JSX.Element => {
                 </p>
               )}
             </div>
-            <label className=" text-center text-xs font-light">
+            {/* <label className=" text-center text-xs font-light">
               Forget Password?{" "}
               <Link
                 to={"/resetPassword"}
@@ -162,7 +160,7 @@ const Login: React.FC = (): JSX.Element => {
               >
                 Reset Password
               </Link>
-            </label>
+            </label> */}
             <div className="relative w-full ">
               {loading ? (
                 <Loading />

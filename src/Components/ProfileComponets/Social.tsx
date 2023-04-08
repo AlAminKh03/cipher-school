@@ -14,7 +14,23 @@ import {
 } from "react-icons/bs";
 import { IconType } from "react-icons";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-right",
+  iconColor: "blue",
+  width: "22rem",
+  background: "black",
+  color: "white",
+  padding: "5px",
+  customClass: {
+    popup: "colored-toast",
+  },
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+});
 interface SocialProps {
   facebook: string;
   instagram: string;
@@ -29,40 +45,15 @@ interface socialProps {
 }
 
 const Social = () => {
-  const { loading } = useContext(AuthContext);
+  const { loading, setLoading } = useContext(AuthContext);
+
   const email = localStorage.getItem("email");
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<SocialProps>();
-
-  const socials: socialProps[] = [
-    {
-      name: "Facebook",
-      icon: BsFacebook,
-    },
-    {
-      name: "Instgram",
-      icon: BsInstagram,
-    },
-    {
-      name: "LinkedIn",
-      icon: BsLinkedin,
-    },
-    {
-      name: "Github",
-      icon: BsGithub,
-    },
-    {
-      name: "Twitter",
-      icon: BsTwitter,
-    },
-    {
-      name: "Website",
-      icon: BsGlobe,
-    },
-  ];
 
   const {
     data: socialLinks,
@@ -76,7 +67,10 @@ const Social = () => {
     console.log(data);
     return data;
   });
+
   const onSubmit: SubmitHandler<SocialProps> = async (data) => {
+    setLoading(true);
+
     const updateInfo = {
       facebook: data.facebook,
       instagram: data.instagram,
@@ -97,18 +91,35 @@ const Social = () => {
       }
     )
       .then((res) => res.json())
+
       .then((data) => {
-        console.log(data);
+        setLoading(false);
+        Toast.fire({
+          icon: "success",
+          title: "Media Links Added",
+          iconColor: "green",
+        });
+
         refetch();
       })
+
       .catch((err) => {
+        setLoading(false);
+        Toast.fire({
+          icon: "error",
+          title: `${err}`,
+          iconColor: "red",
+        });
         console.log(err);
       });
+
     console.log(data);
   };
+
   if (isLoading) {
     return <Loading />;
   }
+
   return (
     <div className="w-full bg-black ">
       <div className="mx-[10%] bg-gray-900 px-10 py-10">

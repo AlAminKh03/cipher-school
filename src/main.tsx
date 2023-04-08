@@ -9,24 +9,25 @@ import UserContext from "./Components/UserContext";
 import PrivateRoute from "./Components/PrivateRoute/PrivateRoute";
 import { QueryClient, QueryClientProvider } from "react-query";
 import MainProfile from "./pages/MainProfile";
+import SignUp from "./pages/signup";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <PrivateRoute>
+        <MainProfile />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/login",
     element: <Login />,
   },
   {
-    path: "/myProfile",
-    element: (
-      <PrivateRoute>
-        <MainProfile />
-      </PrivateRoute>
-    ),
+    path: "/signup",
+    element: <App />,
   },
 ]);
 

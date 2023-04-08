@@ -75,8 +75,7 @@ const Profile = () => {
   }
   console.log(user);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(data);
-
+    setLoading(true);
     if (data.image.length === 0) {
       const updateInfo = {
         email: data.email,
@@ -95,6 +94,7 @@ const Profile = () => {
       )
         .then((res) => res.json())
         .then((data) => {
+          setLoading(false);
           Toast.fire({
             icon: "success",
             title: "Updated successfully",
@@ -134,6 +134,7 @@ const Profile = () => {
           )
             .then((res) => res.json())
             .then((data) => {
+              setLoading(false);
               Toast.fire({
                 icon: "success",
                 title: "Updated Successfylly",

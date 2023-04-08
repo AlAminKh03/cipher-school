@@ -4,14 +4,30 @@ import { AiFillEdit } from "react-icons/ai";
 import { AuthContext } from "../UserContext";
 import Loading from "../../pages/Loading";
 import { useQuery } from "react-query";
+import Swal from "sweetalert2";
 
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-right",
+  iconColor: "blue",
+  width: "22rem",
+  background: "black",
+  color: "white",
+  padding: "5px",
+  customClass: {
+    popup: "colored-toast",
+  },
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+});
 interface InfoProps {
   education: string;
   profession: string;
 }
 
 const Infromation = () => {
-  const { loading } = useContext(AuthContext);
+  const { loading, setLoading } = useContext(AuthContext);
   const email = localStorage.getItem("email");
   const {
     register,
@@ -28,6 +44,7 @@ const Infromation = () => {
     return data;
   });
   const onSubmit: SubmitHandler<InfoProps> = async (data) => {
+    setLoading(true);
     const updateInfo = {
       education: data.education,
       profession: data.profession,
@@ -45,10 +62,12 @@ const Infromation = () => {
     )
       .then((res) => res.json())
       .then((data) => {
+        setLoading(false);
         console.log(data);
         refetch();
       })
       .catch((err) => {
+        setLoading(false);
         console.log(err);
       });
     console.log(data);
