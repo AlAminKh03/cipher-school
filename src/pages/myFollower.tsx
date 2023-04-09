@@ -1,5 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import HomeButton from "../Components/ProfileComponets/HomeButton";
+import Logout from "../Components/ProfileComponets/Logout";
 
 interface FollowerPeops {
   _id: string;
@@ -37,23 +39,46 @@ const MyFollower = () => {
   };
   return (
     <div className="bg-black min-h-screen ">
-      <div className="grid lg:grid-cols-4 grid-cols-1 gap-12 mx-[100px] py-[20px]">
+      <HomeButton />
+      <Logout />
+      <div className="grid lg:grid-cols-3 grid-cols-1 lg:gap-16 gap-8 mx-[100px] py-[20px]">
         {followers.map((follower: FollowerPeops) => {
           return (
             <div className="bg-gray-900 p-6 rounded-md">
               <div key={follower._id}>
-                <img
-                  src={follower.photoUrl}
-                  alt="follower image "
-                  className="w-[150px] h-[150px] rounded-full"
-                />
-                <p className="text-gray-300 font-semibold">{follower.name}</p>
-                <p className="text-gray-300 font-semibold">
-                  Status: {follower.status}
-                </p>
-                <p className="text-gray-300 font-semibold">
-                  {" "}
-                  {follower.follower} Followers
+                <div className="flex justify-between my-2">
+                  <div className="flex gap-2">
+                    <div>
+                      <img
+                        src={follower.photoUrl}
+                        alt="follower image "
+                        className="w-[50px] h-[50px] rounded-full border-2 object-cover border-blue-400 "
+                      />
+                    </div>
+                    <div>
+                      <p className="text-gray-200 font-semibold text-lg">
+                        {follower.name}
+                      </p>
+                      <p className="text-gray-500  text-sm">
+                        {" "}
+                        @{follower.name}
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <button className="py-1 px-4 bg-blue-500 rounded-2xl text-gray-200 font-semibold">
+                      Follow
+                    </button>
+                  </div>
+                </div>
+                <p className="text-gray-400 font-semibold">{follower.status}</p>
+                <p className="text-gray-400 text-sm">
+                  <span className="font-bold">{follower.follower}</span>{" "}
+                  Followers{" "}
+                  <span className="px-2">
+                    {" "}
+                    <span className="font-bold">13</span> Following 🚀
+                  </span>
                 </p>
               </div>
             </div>
@@ -64,9 +89,9 @@ const MyFollower = () => {
         <button
           className={`mr-2 ${
             currentPage === 1
-              ? "bg-gray-300 cursor-default"
-              : "bg-gray-500 hover:bg-gray-600"
-          } px-4 py-2 rounded-md`}
+              ? "bg-blue-600 cursor-default"
+              : "bg-gray-500 hover:bg-blue-600"
+          } px-4 py-2 rounded-md text-white font-semibold`}
           disabled={currentPage === 1}
           onClick={handlePrevPage}
         >
@@ -76,9 +101,9 @@ const MyFollower = () => {
         <button
           className={`ml-2 ${
             currentPage === totalPages
-              ? "bg-gray-300 cursor-default"
-              : "bg-gray-500 hover:bg-gray-600"
-          } px-4 py-2 rounded-md`}
+              ? "bg-blue-600 cursor-default"
+              : "bg-gray-500 hover:bg-blue-600"
+          } px-4 py-2 rounded-md text-white font-semibold`}
           disabled={currentPage === totalPages}
           onClick={handleNextPage}
         >

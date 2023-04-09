@@ -3,8 +3,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { AiFillEdit, AiOutlineLock, AiOutlineMail } from "react-icons/ai";
 import { AuthContext } from "../UserContext";
 import Loading from "../../pages/Loading";
-import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
 import { RxEyeClosed, RxEyeOpen } from "react-icons/rx";
 import Swal from "sweetalert2";
 

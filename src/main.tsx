@@ -32,7 +32,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/followers",
-    element: <MyFollower />,
+    element: (
+      <PrivateRoute>
+        <MyFollower />
+      </PrivateRoute>
+    ),
   },
 ]);
 
