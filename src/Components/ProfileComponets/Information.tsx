@@ -35,7 +35,11 @@ const Infromation = () => {
     formState: { errors },
   } = useForm<InfoProps>();
 
-  const { data: Infos, refetch } = useQuery(["Infos"], async () => {
+  const {
+    data: Infos,
+    refetch,
+    isLoading,
+  } = useQuery(["Infos"], async () => {
     const res = await fetch(
       `https://cipher-school-server-ecru.vercel.app/user/getInfo/${email}`
     );
@@ -72,6 +76,9 @@ const Infromation = () => {
       });
     console.log(data);
   };
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div className="w-full bg-black ">
       <div className="mx-[10%] bg-gray-900 px-10 py-10">
